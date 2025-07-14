@@ -3,8 +3,8 @@ title: Calorie Burn Predictor
 emoji: 📚
 colorFrom: green
 colorTo: green
-sdk: gradio
-sdk_version: 5.36.2
+sdk: streamlit
+sdk_version: 1.46.1
 app_file: app.py
 pinned: false
 ---
