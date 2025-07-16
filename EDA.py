@@ -99,20 +99,45 @@ Let’s look at how features relate to calories burned.
 
 st.subheader("📈 Visualizations")
 
-# Images are placed in Images folder (place your .png files there)
-col1, col2 = st.columns(2)
-with col1:
-    st.image("Images/correlation_heatmap.png", caption="Correlation Heatmap", use_column_width=True)
-
-with col2:
-    st.image("Images/sleep_vs_calories.png", caption="Sleep Hours vs Calories Burned", use_column_width=True)
+# New Inline Plots (No image file needed)
 
 col1, col2 = st.columns(2)
+
 with col1:
-    st.image("Images/height_vs_calories.png", caption="Height vs Calories Burned", use_column_width=True)
+    st.subheader("Correlation Heatmap")
+    corr = df.select_dtypes(include=['float64']).corr()
+    fig1, ax1 = plt.subplots(figsize=(6, 5))
+    sns.heatmap(corr, annot=True, cmap='coolwarm', ax=ax1)
+    st.pyplot(fig1)
 
 with col2:
-    st.image("Images/workingtype_distribution.png", caption="Working Type Distribution", use_column_width=True)
+    st.subheader("Sleep Hours vs Calories Burned")
+    fig2, ax2 = plt.subplots()
+    ax2.scatter(df['Sleep_Hours'], df['Required_Daily_Calories'], alpha=0.6, color='orange')
+    ax2.set_xlabel("Sleep Hours")
+    ax2.set_ylabel("Required Daily Calories")
+    ax2.set_title("Sleep vs Calories")
+    st.pyplot(fig2)
+
+col3, col4 = st.columns(2)
+
+with col3:
+    st.subheader("Height vs Calories Burned")
+    fig3, ax3 = plt.subplots()
+    ax3.scatter(df['Height_m'], df['Required_Daily_Calories'], alpha=0.6, color='green')
+    ax3.set_xlabel("Height (m)")
+    ax3.set_ylabel("Required Daily Calories")
+    ax3.set_title("Height vs Calories")
+    st.pyplot(fig3)
+
+with col4:
+    st.subheader("Working Type Distribution")
+    fig4, ax4 = plt.subplots()
+    df['Working_Type'].value_counts().plot(kind='bar', ax=ax4, color='purple', edgecolor='black')
+    ax4.set_title("Working Type Distribution")
+    ax4.set_xlabel("Job Type")
+    ax4.set_ylabel("Count")
+    st.pyplot(fig4)
 
 st.subheader("🧠 Key Takeaways")
 st.write("""
