@@ -9,13 +9,12 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-
 # Load the dataset
 df = pd.read_csv("balanc_diet (1).csv")
 
 st.title("📊 Balanced Diet Dataset - EDA Dashboard")
 
-# Create all-in-one matplotlib figure
+# All-in-one plot (6 subplots)
 fig, axes = plt.subplots(3, 2, figsize=(15, 18))
 fig.suptitle('Exploratory Data Analysis on Balanced Diet Dataset', fontsize=16)
 
@@ -50,16 +49,15 @@ axes[2, 0].set_title('Calories vs. Age')
 axes[2, 0].set_xlabel('Age')
 axes[2, 0].set_ylabel('Required Daily Calories')
 
-# 6. Correlation Heatmap
+# 6. Correlation Heatmap (small version)
 corr = df.select_dtypes(include=['float64']).corr()
+sns.heatmap(corr, annot=True, cmap='coolwarm', ax=axes[2, 1])
+axes[2, 1].set_title('Correlation Heatmap')
 
-fig, ax = plt.subplots(figsize=(8, 6))
-sns.heatmap(corr, annot=True, cmap='coolwarm', ax=ax)
-ax.set_title('Correlation Heatmap')
-
+# Show all-in-one plot
 st.pyplot(fig)
 
-
+# --------------------------------------------
 
 st.header("Exploratory Data Analysis", divider="blue")
 
@@ -69,11 +67,8 @@ The dataset contains information about people’s age, gender, height, sleep hab
 Our goal is to understand how these features relate to the number of calories they burn.
 """)
 
-# Load your dataset
-df = pd.read_csv("balanc_diet (1).csv")  # adjust filename if different
-st.dataframe(df.head())
-
 st.subheader("📊 Quick Summary")
+st.dataframe(df.head())
 st.write(df.describe())
 
 st.subheader("📌 Observations")
@@ -94,12 +89,9 @@ Let’s look at how features relate to calories burned.
 - **Height**: Taller people burn more calories.
 - **Sleep Hours**: There’s a slight trend—more rest may affect calorie usage.
 - **Working Type**: Certain jobs seem to involve more physical activity.
-
 """)
 
-st.subheader("📈 Visualizations")
-
-# New Inline Plots (No image file needed)
+st.subheader("📈 Visualizations (Detailed)")
 
 col1, col2 = st.columns(2)
 
