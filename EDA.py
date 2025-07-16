@@ -52,11 +52,11 @@ axes[2, 0].set_ylabel('Required Daily Calories')
 
 # 6. Correlation Heatmap
 corr = df.select_dtypes(include=['float64']).corr()
-sns.heatmap(corr, annot=True, cmap='coolwarm', ax=axes[2, 1])
-axes[2, 1].set_title('Correlation Heatmap')
 
-# Adjust layout and show
-plt.tight_layout(rect=[0, 0.03, 1, 0.97])
+fig, ax = plt.subplots(figsize=(8, 6))
+sns.heatmap(corr, annot=True, cmap='coolwarm', ax=ax)
+ax.set_title('Correlation Heatmap')
+
 st.pyplot(fig)
 
 
