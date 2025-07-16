@@ -32,7 +32,7 @@ The more related they are, the more useful they are for the model.
 """)
 
 # Load your feature importance file
-    df = pd.read_csv("mi.csv")
+    df = pd.read_csv("balanc_diet (1).csv")
     st.dataframe(df)
 
     st.subheader("✅ Final Selected Features:")
