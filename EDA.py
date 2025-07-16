@@ -1,11 +1,65 @@
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 st.set_page_config(
     page_title="Calorie Burn Prediction - EDA",
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+
+# Load the dataset
+df = pd.read_csv("balanc_diet (1).csv")
+
+st.title("📊 Balanced Diet Dataset - EDA Dashboard")
+
+# Create all-in-one matplotlib figure
+fig, axes = plt.subplots(3, 2, figsize=(15, 18))
+fig.suptitle('Exploratory Data Analysis on Balanced Diet Dataset', fontsize=16)
+
+# 1. Age Distribution
+axes[0, 0].hist(df['Age'].dropna(), bins=30, color='skyblue', edgecolor='black')
+axes[0, 0].set_title('Age Distribution')
+axes[0, 0].set_xlabel('Age')
+axes[0, 0].set_ylabel('Count')
+
+# 2. Gender Distribution
+df['Gender'].value_counts().plot(kind='bar', color='coral', edgecolor='black', ax=axes[0, 1])
+axes[0, 1].set_title('Gender Distribution')
+axes[0, 1].set_xlabel('Gender')
+axes[0, 1].set_ylabel('Count')
+
+# 3. Working Type Distribution
+df['Working_Type'].value_counts().plot(kind='bar', color='mediumseagreen', edgecolor='black', ax=axes[1, 0])
+axes[1, 0].set_title('Working Type Distribution')
+axes[1, 0].set_xlabel('Working Type')
+axes[1, 0].set_ylabel('Count')
+axes[1, 0].tick_params(axis='x', rotation=45)
+
+# 4. Sleep Hours Distribution
+axes[1, 1].hist(df['Sleep_Hours'].dropna(), bins=30, color='violet', edgecolor='black')
+axes[1, 1].set_title('Sleep Hours Distribution')
+axes[1, 1].set_xlabel('Sleep Hours')
+axes[1, 1].set_ylabel('Count')
+
+# 5. Calories vs. Age (Scatter)
+axes[2, 0].scatter(df['Age'], df['Required_Daily_Calories'], alpha=0.5, color='teal')
+axes[2, 0].set_title('Calories vs. Age')
+axes[2, 0].set_xlabel('Age')
+axes[2, 0].set_ylabel('Required Daily Calories')
+
+# 6. Correlation Heatmap
+corr = df.select_dtypes(include=['float64']).corr()
+sns.heatmap(corr, annot=True, cmap='coolwarm', ax=axes[2, 1])
+axes[2, 1].set_title('Correlation Heatmap')
+
+# Adjust layout and show
+plt.tight_layout(rect=[0, 0.03, 1, 0.97])
+st.pyplot(fig)
+
+
 
 st.header("Exploratory Data Analysis", divider="blue")
 
