@@ -15,7 +15,7 @@ st.title("Calorie Burn Prediction App")
 
 st.subheader("Enter Transaction Details Below")
 
-age = st.number_input("Enter your age :",min_value=0,max_value=100)
+age = st.number_input("Enter your age :",min_value=10,max_value=100)
 gender = st.selectbox("Gender :", ["Male", "Female", "Other"])
 working_type = st.selectbox("Working Type:",["Freelancer","Private","Government","Self-employed","Others"])
 sleep_hours = st.slider("Sleep Hours", 0.0, 24.0, step=0.1, value=7.0)
