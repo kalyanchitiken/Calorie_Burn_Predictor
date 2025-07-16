@@ -16,7 +16,7 @@ Our goal is to understand how these features relate to the number of calories th
 """)
 
 # Load your dataset
-df = pd.read_csv("dataset1.csv")  # adjust filename if different
+df = pd.read_csv("balanc_diet (1).csv")  # adjust filename if different
 st.dataframe(df.head())
 
 st.subheader("📊 Quick Summary")
