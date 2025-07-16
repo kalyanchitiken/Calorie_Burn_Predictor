@@ -32,8 +32,8 @@ The more related they are, the more useful they are for the model.
 """)
 
 # Load your feature importance file
+try:
     df = pd.read_csv("balanc_diet (1).csv")
-    st.dataframe(df)
 
     st.subheader("✅ Final Selected Features:")
     st.write("""
@@ -43,7 +43,7 @@ The more related they are, the more useful they are for the model.
     - We kept things like **Height**, **Age**, and **Sleep Hours** because they showed high importance.
     """)
 except:
-    st.warning("Feature scores file (mi.csv) not found. Please make sure it’s in the root folder.")
+    st.warning("Feature scores file (balanc_diet (1).csv) not found. Please make sure it’s in the root folder.")
 
 st.subheader("Conclusion")
 st.write("""
