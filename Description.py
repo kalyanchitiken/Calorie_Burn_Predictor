@@ -9,7 +9,7 @@ st.set_page_config(
 
 st.header("Dataset Description", divider="blue")
 
-df = pd.read_csv("balanc_diet.csv")  
+df = pd.read_csv("balanc_diet (1).csv")  
 st.dataframe(df)
 
 # Create two columns
