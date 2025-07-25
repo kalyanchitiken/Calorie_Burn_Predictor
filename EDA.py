@@ -16,7 +16,7 @@ st.markdown("Explore and visualize the calorie burn dataset using interactive ch
 # Load dataset
 @st.cache_data
 def load_data():
-    df = pd.read_csv(balanc_diet (1).csv)
+    df = pd.read_csv('balanc_diet (1).csv')
     return df
 
 df = load_data()
