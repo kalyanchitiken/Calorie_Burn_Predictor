@@ -1,16 +1,16 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
+import plotly.express as px
+import plotly.graph_objects as go
 
-# Streamlit config
+# Page settings
 st.set_page_config(
     page_title="Calorie Burn Prediction - EDA",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="expanded"
 )
 
-# Load dataset
+# Load data
 @st.cache_data
 def load_data():
     return pd.read_csv("balanc_diet (1).csv")
@@ -19,153 +19,91 @@ df = load_data()
 
 st.title("📊 Balanced Diet Dataset - EDA Dashboard")
 
-# --------------------------------------------
-# 👇 All-in-one Overview Plot
-@st.cache_data
-def draw_combined_plot(df):
-    fig, axes = plt.subplots(3, 2, figsize=(15, 18))
-    fig.suptitle('Exploratory Data Analysis on Balanced Diet Dataset', fontsize=16)
-
-    # Age Distribution
-    axes[0, 0].hist(df['Age'].dropna(), bins=30, color='skyblue', edgecolor='black')
-    axes[0, 0].set_title('Age Distribution')
-    axes[0, 0].set_xlabel('Age')
-    axes[0, 0].set_ylabel('Count')
-
-    # Gender Distribution
-    df['Gender'].value_counts().plot(kind='bar', color='coral', edgecolor='black', ax=axes[0, 1])
-    axes[0, 1].set_title('Gender Distribution')
-    axes[0, 1].set_xlabel('Gender')
-    axes[0, 1].set_ylabel('Count')
-
-    # Working Type
-    df['Working_Type'].value_counts().plot(kind='bar', color='mediumseagreen', edgecolor='black', ax=axes[1, 0])
-    axes[1, 0].set_title('Working Type Distribution')
-    axes[1, 0].set_xlabel('Working Type')
-    axes[1, 0].set_ylabel('Count')
-    axes[1, 0].tick_params(axis='x', rotation=45)
-
-    # Sleep Hours
-    axes[1, 1].hist(df['Sleep_Hours'].dropna(), bins=30, color='violet', edgecolor='black')
-    axes[1, 1].set_title('Sleep Hours Distribution')
-    axes[1, 1].set_xlabel('Sleep Hours')
-    axes[1, 1].set_ylabel('Count')
-
-    # Scatter: Age vs Calories
-    axes[2, 0].scatter(df['Age'], df['Required_Daily_Calories'], alpha=0.5, color='teal')
-    axes[2, 0].set_title('Calories vs. Age')
-    axes[2, 0].set_xlabel('Age')
-    axes[2, 0].set_ylabel('Required Daily Calories')
-
-    # Correlation Heatmap
-    corr = df.select_dtypes(include=['float64']).corr()
-    sns.heatmap(corr, annot=True, cmap='coolwarm', ax=axes[2, 1])
-    axes[2, 1].set_title('Correlation Heatmap')
-
-    fig.tight_layout(rect=[0, 0, 1, 0.96])
-    return fig
-
-st.pyplot(draw_combined_plot(df))
-
-# --------------------------------------------
-st.header("Exploratory Data Analysis", divider="blue")
-
-st.subheader("🧾 Statistics")
-st.write("""
-The dataset contains information about people’s age, gender, height, sleep habits, and working type.  
-Our goal is to understand how these features relate to the number of calories they burn.
-""")
-
-st.subheader("📊 Quick Summary")
-st.dataframe(df.head())
-st.write(df.describe())
-
-st.subheader("📌 Observations")
-st.write("""
-- **Age** ranges from teenagers to older adults.
-- **Gender** is labeled as 0 or 1 (probably Female and Male).
-- **Working_Type** includes different job roles like Private, Government, etc.
-- **Sleep_Hours** is usually between 5 to 9 hours per night.
-- **Height_m** varies from short to tall individuals.
-- **Calories_Burned** is our target, and it seems to increase with height and age.
-""")
-
-st.subheader("🔍 Correlation Check")
-st.write("""
-Let’s look at how features relate to calories burned.
-
-- **Age**: Older people tend to burn more.
-- **Height**: Taller people burn more calories.
-- **Sleep Hours**: There’s a slight trend—more rest may affect calorie usage.
-- **Working Type**: Certain jobs seem to involve more physical activity.
-""")
-
-# --------------------------------------------
-# 👇 Detailed Visualizations
-
-@st.cache_data
-def plot_corr_heatmap(data):
-    fig, ax = plt.subplots(figsize=(6, 5))
-    sns.heatmap(data.select_dtypes(include=['float64']).corr(), annot=True, cmap='coolwarm', ax=ax)
-    ax.set_title("Correlation Heatmap")
-    fig.tight_layout()
-    return fig
-
-@st.cache_data
-def plot_sleep_vs_calories(data):
-    fig, ax = plt.subplots()
-    ax.scatter(data['Sleep_Hours'], data['Required_Daily_Calories'], alpha=0.6, color='orange')
-    ax.set_xlabel("Sleep Hours")
-    ax.set_ylabel("Required Daily Calories")
-    ax.set_title("Sleep vs Calories")
-    fig.tight_layout()
-    return fig
-
-@st.cache_data
-def plot_height_vs_calories(data):
-    fig, ax = plt.subplots()
-    ax.scatter(data['Height_m'], data['Required_Daily_Calories'], alpha=0.6, color='green')
-    ax.set_xlabel("Height (m)")
-    ax.set_ylabel("Required Daily Calories")
-    ax.set_title("Height vs Calories")
-    fig.tight_layout()
-    return fig
-
-@st.cache_data
-def plot_working_type(data):
-    fig, ax = plt.subplots()
-    data['Working_Type'].value_counts().plot(kind='bar', ax=ax, color='purple', edgecolor='black')
-    ax.set_title("Working Type Distribution")
-    ax.set_xlabel("Job Type")
-    ax.set_ylabel("Count")
-    fig.tight_layout()
-    return fig
+# -------------------------------------
+st.header("📈 Overview Charts")
 
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("Correlation Heatmap")
-    st.pyplot(plot_corr_heatmap(df))
+    fig_age = px.histogram(df, x="Age", nbins=30, title="Age Distribution",
+                           color_discrete_sequence=['skyblue'])
+    st.plotly_chart(fig_age, use_container_width=True)
 
 with col2:
-    st.subheader("Sleep Hours vs Calories Burned")
-    st.pyplot(plot_sleep_vs_calories(df))
+    fig_gender = px.bar(df["Gender"].value_counts().reset_index(),
+                        x="index", y="Gender", title="Gender Distribution",
+                        labels={"index": "Gender", "Gender": "Count"},
+                        color_discrete_sequence=['coral'])
+    st.plotly_chart(fig_gender, use_container_width=True)
 
 col3, col4 = st.columns(2)
 
 with col3:
-    st.subheader("Height vs Calories Burned")
-    st.pyplot(plot_height_vs_calories(df))
+    fig_work = px.bar(df["Working_Type"].value_counts().reset_index(),
+                      x="index", y="Working_Type", title="Working Type Distribution",
+                      labels={"index": "Job Type", "Working_Type": "Count"},
+                      color_discrete_sequence=['mediumseagreen'])
+    st.plotly_chart(fig_work, use_container_width=True)
 
 with col4:
-    st.subheader("Working Type Distribution")
-    st.pyplot(plot_working_type(df))
+    fig_sleep = px.histogram(df, x="Sleep_Hours", nbins=30,
+                             title="Sleep Hours Distribution",
+                             color_discrete_sequence=['violet'])
+    st.plotly_chart(fig_sleep, use_container_width=True)
 
-# --------------------------------------------
-st.subheader("🧠 Key Takeaways")
+# -------------------------------------
+st.header("🔍 Feature Relationships")
+
+col5, col6 = st.columns(2)
+
+with col5:
+    fig_cal_age = px.scatter(df, x="Age", y="Required_Daily_Calories",
+                             title="Calories vs Age",
+                             opacity=0.6, color_discrete_sequence=['teal'])
+    st.plotly_chart(fig_cal_age, use_container_width=True)
+
+with col6:
+    fig_cal_sleep = px.scatter(df, x="Sleep_Hours", y="Required_Daily_Calories",
+                               title="Calories vs Sleep Hours",
+                               opacity=0.6, color_discrete_sequence=['orange'])
+    st.plotly_chart(fig_cal_sleep, use_container_width=True)
+
+col7, col8 = st.columns(2)
+
+with col7:
+    fig_cal_height = px.scatter(df, x="Height_m", y="Required_Daily_Calories",
+                                title="Calories vs Height",
+                                opacity=0.6, color_discrete_sequence=['green'])
+    st.plotly_chart(fig_cal_height, use_container_width=True)
+
+with col8:
+    # Correlation heatmap (float columns)
+    corr_df = df.select_dtypes(include='number').corr().round(2)
+    fig_heatmap = go.Figure(data=go.Heatmap(
+        z=corr_df.values,
+        x=corr_df.columns,
+        y=corr_df.index,
+        colorscale='RdBu',
+        zmin=-1, zmax=1,
+        colorbar=dict(title="Correlation")
+    ))
+    fig_heatmap.update_layout(title="Correlation Heatmap", xaxis_nticks=36)
+    st.plotly_chart(fig_heatmap, use_container_width=True)
+
+# -------------------------------------
+st.header("🧾 Dataset Overview")
+
+st.subheader("📊 First 5 Records")
+st.dataframe(df.head())
+
+st.subheader("📌 Summary Statistics")
+st.dataframe(df.describe())
+
+# -------------------------------------
+st.header("🧠 Key Observations")
 st.write("""
-- People who are taller and older generally burn more calories.
-- Job type matters — more active jobs lead to more calorie burn.
-- Sleep plays a small but noticeable role.
-- Most people fall in the mid-range for calories burned, but a few outliers exist with very high values.
+- Taller and older individuals generally burn more calories.
+- Certain working types (more physical jobs) tend to burn more.
+- Sleep hours show a mild positive influence on calorie usage.
+- Gender and height may contribute indirectly via BMI/physical traits.
 """)
